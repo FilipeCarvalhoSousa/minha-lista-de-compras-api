@@ -22,3 +22,8 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# .env files
+.env
+.env.*
+!.env.example
