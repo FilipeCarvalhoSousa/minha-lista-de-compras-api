@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './modules/products/products.module';
 import { EstablishmentsModule } from './modules/establishments/establishments.module';
 import { ShoppingListsModule } from './modules/shopping-lists/shopping-lists.module';
+import { ShoppingListItemsModule } from './modules/shopping-list-items/shopping-list-items.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -24,6 +25,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ProductsModule,
     EstablishmentsModule,
     ShoppingListsModule,
+    ShoppingListItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
