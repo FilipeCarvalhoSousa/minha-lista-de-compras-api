@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './modules/products/products.module';
 import { EstablishmentsModule } from './modules/establishments/establishments.module';
+import { ShoppingListsModule } from './modules/shopping-lists/shopping-lists.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -22,6 +23,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     DatabaseModule,
     ProductsModule,
     EstablishmentsModule,
+    ShoppingListsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
