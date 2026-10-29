@@ -5,6 +5,7 @@ import {
   numeric,
   timestamp,
   index,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 import { shoppingLists } from './shopping-lists.schema';
@@ -58,10 +59,11 @@ export const shoppingListItems = pgTable(
       .notNull(),
   },
   (table) => [
-    index('shopping_list_items_list_idx')
-      .on(table.shoppingListId),
-
-    index('shopping_list_items_product_idx')
-      .on(table.productId),
+    index('shopping_list_items_list_id_idx').on(table.shoppingListId),
+    index('shopping_list_items_product_id_idx').on(table.productId),
+    uniqueIndex('shopping_list_items_list_product_unique').on(
+      table.shoppingListId,
+      table.productId,
+    ),
   ],
 );

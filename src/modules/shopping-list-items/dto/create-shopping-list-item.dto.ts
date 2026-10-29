@@ -1,48 +1,41 @@
-import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsInt,
   IsNumber,
   IsOptional,
   Min,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+import { CreateProductDto } from '../../products/dto/create-product.dto';
 
 export class CreateShoppingListItemDto {
-  @ApiProperty({ example: 1 })
-  @Type(() => Number)
+  @ApiPropertyOptional({ example: 10 })
+  @ValidateIf((o) => o.newProduct == null)
   @IsInt()
   @Min(1)
-  shoppingListId: number;
+  productId?: number;
 
-  @ApiProperty({ example: 1 })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  productId: number;
+  @ApiPropertyOptional({ type: CreateProductDto })
+  @ValidateIf((o) => o.productId == null)
+  @ValidateNested()
+  @Type(() => CreateProductDto)
+  newProduct?: CreateProductDto;
 
-  @ApiPropertyOptional({ example: 2, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
+  @ApiProperty({ example: 2 })
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0.001)
-  quantity?: number;
+  quantity: number;
 
-  @ApiProperty({ example: 12.5 })
-  @Type(() => Number)
+  @ApiProperty({ example: 5.5 })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   unitPrice: number;
 
-  @ApiPropertyOptional({ example: 1.25, default: 0 })
+  @ApiPropertyOptional({ example: 0, default: 0 })
   @IsOptional()
-  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   discountAmount?: number;
-
-  @ApiProperty({ example: 23.75 })
-  @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  totalPrice: number;
 }

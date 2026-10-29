@@ -8,7 +8,11 @@ import {
   IsString,
   MaxLength,
   Min,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateShoppingListItemDto } from '../../shopping-list-items/dto/create-shopping-list-item.dto';
 
 export class CreateShoppingListDto {
   @ApiProperty({ example: 'Compras da semana' })
@@ -45,9 +49,21 @@ export class CreateShoppingListDto {
   @MaxLength(10)
   invoiceSeries?: string;
 
-  @ApiPropertyOptional({ example: '12345678901234567890123456789012345678901234' })
+  @ApiPropertyOptional({
+    example: '12345678901234567890123456789012345678901234',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(44)
   invoiceAccessKey?: string;
+
+  @ApiPropertyOptional({
+    type: [CreateShoppingListItemDto],
+    description: 'Itens que serão incluídos na lista.',
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateShoppingListItemDto)
+  items?: CreateShoppingListItemDto[];
 }

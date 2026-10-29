@@ -3,6 +3,7 @@ import {
   serial,
   varchar,
   timestamp,
+  boolean,
 } from 'drizzle-orm/pg-core';
 
 export const products = pgTable('products', {
@@ -31,4 +32,6 @@ export const products = pgTable('products', {
   })
     .defaultNow()
     .notNull(),
+
+  isProvisional: boolean('is_provisional').notNull().default(false),
 });

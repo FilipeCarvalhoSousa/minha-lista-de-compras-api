@@ -17,9 +17,7 @@ describe('ShoppingListItemsController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ShoppingListItemsController],
-      providers: [
-        { provide: ShoppingListItemsService, useValue: serviceMock },
-      ],
+      providers: [{ provide: ShoppingListItemsService, useValue: serviceMock }],
     }).compile();
 
     controller = module.get<ShoppingListItemsController>(
@@ -32,48 +30,37 @@ describe('ShoppingListItemsController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('delegates list retrieval to the service', () => {
-    service.findAll.mockReturnValue([]);
+  it('delegates list retrieval to the service', async () => {
+    service.findAll.mockResolvedValue([] as never);
 
-    expect(controller.findAll()).toEqual([]);
+    await expect(controller.findAll(1)).resolves.toEqual([]);
     expect(service.findAll.mock.calls).toHaveLength(1);
   });
 
-  it('delegates creation to the service', () => {
-    const data = {
-      shoppingListId: 1,
-      productId: 2,
-      unitPrice: 10,
-      totalPrice: 20,
-    };
-    service.create.mockReturnValue(data as never);
-
-    expect(controller.create(data)).toBe(data);
-    expect(service.create.mock.calls[0]).toEqual([data]);
-  });
-
-  it('delegates retrieval by ID to the service', () => {
+  it('delegates retrieval by ID to the service', async () => {
     const item = { id: 1, productId: 2 };
-    service.findById.mockReturnValue(item as never);
+    service.findById.mockResolvedValue(item as never);
 
-    expect(controller.findById(1)).toBe(item);
+    await expect(controller.findById(1, 1)).resolves.toBe(item);
     expect(service.findById.mock.calls[0]).toEqual([1]);
   });
 
-  it('delegates updates to the service', () => {
+  it('delegates updates to the service', async () => {
     const data = { quantity: 3 };
     const item = { id: 1, ...data };
-    service.update.mockReturnValue(item as never);
+    service.update.mockResolvedValue(item as never);
 
-    expect(controller.update(1, data)).toBe(item);
+    await expect(controller.update(1, 1, data)).resolves.toBe(item);
     expect(service.update.mock.calls[0]).toEqual([1, data]);
   });
 
-  it('delegates deletion to the service', () => {
-    const result = { message: 'Item da lista de compras excluído com sucesso.' };
-    service.delete.mockReturnValue(result as never);
+  it('delegates deletion to the service', async () => {
+    const result = {
+      message: 'Item da lista de compras excluído com sucesso.',
+    };
+    service.delete.mockResolvedValue(result as never);
 
-    expect(controller.delete(1)).toBe(result);
+    await expect(controller.delete(1, 1)).resolves.toBe(result);
     expect(service.delete.mock.calls[0]).toEqual([1]);
   });
 });

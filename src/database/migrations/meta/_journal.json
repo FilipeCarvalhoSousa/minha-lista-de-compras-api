@@ -15,6 +15,20 @@
       "when": 1792777951189,
       "tag": "0001_previous_roxanne_simpson",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793033797711,
+      "tag": "0002_unique_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793211595103,
+      "tag": "0003_fluffy_marauders",
+      "breakpoints": true
     }
   ]
 }

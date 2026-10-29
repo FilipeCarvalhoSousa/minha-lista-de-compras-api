@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     instrument: ObserveInstrument,
   });
+  app.enableCors({ origin: '*', methods: 'GET,HEAD,PUT,PATCH,POST,DELETE' });
 
   const config = new DocumentBuilder()
     .setTitle('Minha Lista de Compras API')
@@ -20,14 +21,14 @@ async function bootstrap() {
 
   SwaggerModule.setup('api/docs', app, document);
 
-  app.useGlobalPipes( 
-    new ValidationPipe({ 
-      whitelist: true, 
-      forbidNonWhitelisted: true, 
-      transform: true, 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
-  
+
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

@@ -6,10 +6,14 @@ import {
 import { CreateShoppingListDto } from '../dto/create-shopping-list.dto';
 import { UpdateShoppingListDto } from '../dto/update-shopping-list.dto';
 import { ShoppingListsRepository } from '../repository/shopping-lists.repository';
+import { EstablishmentsRepository } from '../../establishments/repository/establishments.repository';
 
 @Injectable()
 export class ShoppingListsService {
-  constructor(private readonly repository: ShoppingListsRepository) {}
+  constructor(
+    private readonly repository: ShoppingListsRepository,
+    private readonly establishmentsRepository: EstablishmentsRepository,
+  ) {}
 
   async findAll() {
     return this.repository.findAll();
@@ -39,8 +43,10 @@ export class ShoppingListsService {
         );
       }
     }
+    await this.validateEstablishment(data.establishmentId);
+    await this.validateInvoiceAccessKey(data.invoiceAccessKey);
 
-    return this.repository.create(data);
+    return this.repository.createWithItems(data);
   }
 
   async update(id: number, data: UpdateShoppingListDto) {
@@ -68,5 +74,38 @@ export class ShoppingListsService {
     return {
       message: 'Lista de compras excluída com sucesso.',
     };
+  }
+
+  private async validateEstablishment(establishmentId?: number | null) {
+    if (establishmentId == null) {
+      return;
+    }
+
+    const establishment =
+      await this.establishmentsRepository.findById(establishmentId);
+
+    if (!establishment) {
+      throw new NotFoundException(
+        `Estabelecimento com ID ${establishmentId} não encontrado.`,
+      );
+    }
+  }
+
+  private async validateInvoiceAccessKey(
+    invoiceAccessKey?: string | null,
+    currentListId?: number,
+  ) {
+    if (!invoiceAccessKey) {
+      return;
+    }
+
+    const existing =
+      await this.repository.findByInvoiceAccessKey(invoiceAccessKey);
+
+    if (existing && existing.id !== currentListId) {
+      throw new ConflictException(
+        'Essa chave de acesso da nota fiscal já está vinculada a outra lista.',
+      );
+    }
   }
 }
